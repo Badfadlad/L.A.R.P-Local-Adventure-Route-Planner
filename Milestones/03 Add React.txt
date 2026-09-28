@@ -1,0 +1,11 @@
+Add React
+
+Goal:
+Convert the front-end interface into reusable React components.
+
+Planned work:
+- Navigation component
+- Place cards
+- Trip cards
+- Route components
+- Review form

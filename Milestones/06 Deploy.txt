@@ -1,0 +1,10 @@
+Deploy
+
+Goal:
+Publish the completed L.A.R.P website.
+
+Planned work:
+- Create production build
+- Deploy site
+- Verify public link
+- Add final link to project submission

@@ -1,0 +1,58 @@
+L.A.R.P GitHub Issues
+
+COMPLETED DESIGN ISSUES
+
+1. Add homepage Figma designs
+Milestone: Front-End Design
+Suggested branch: docs-homepage-designs
+
+2. Add Discover page Figma designs
+Milestone: Front-End Design
+Suggested branch: docs-discover-designs
+
+3. Add Route Builder Figma designs
+Milestone: Front-End Design
+Suggested branch: docs-route-builder-designs
+
+4. Add Account and Reviews Figma designs
+Milestone: Front-End Design
+Suggested branch: docs-account-reviews-designs
+
+
+PLANNED ISSUES
+
+5. Create initial front-end project structure
+Milestone: Front-End Implementation
+Suggested branch: frontend-project-structure
+
+6. Implement homepage from Figma
+Milestone: Front-End Implementation
+Suggested branch: frontend-homepage
+
+7. Implement Discover page from Figma
+Milestone: Front-End Implementation
+Suggested branch: frontend-discover-page
+
+8. Implement Route Builder from Figma
+Milestone: Front-End Implementation
+Suggested branch: frontend-route-builder
+
+9. Implement Account and Reviews from Figma
+Milestone: Front-End Implementation
+Suggested branch: frontend-account-reviews
+
+10. Convert shared UI into React components
+Milestone: Add React
+Suggested branch: react-component-setup
+
+11. Set up backend API structure
+Milestone: Add Backend
+Suggested branch: backend-api-setup
+
+12. Test responsive layouts and main user flows
+Milestone: Testing & Integration
+Suggested branch: testing-responsive-layout
+
+13. Deploy the L.A.R.P website
+Milestone: Deploy
+Suggested branch: deploy-github-pages

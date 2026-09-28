@@ -1,0 +1,30 @@
+L.A.R.P To Do
+
+DONE
+- Finish homepage Figma design
+- Finish mobile homepage design
+- Finish Discover design
+- Finish Route Builder desktop design
+- Finish Route Builder mobile design
+- Finish Account / Saved Trips / Reviews desktop design
+- Finish Account / Saved Trips / Reviews mobile design
+- Create shared GitHub repository
+- Add all team members
+- Add UED094
+- Create milestones
+- Create issues
+
+TO DO
+
+- Create GitHub Project board
+- Attach each issue to the correct milestone
+- Create functional branches
+- Do not work directly on main
+- Open Pull Requests for branch work
+- Have teammates review Pull Requests
+- Merge approved Pull Requests into main
+- Begin front-end coding from the approved Figma designs
+- Add React later
+- Add backend later
+- Test the project
+- Deploy the final website

@@ -1,0 +1,10 @@
+Add Backend
+
+Goal:
+Add backend support for the main L.A.R.P features.
+
+Planned work:
+- User profiles
+- Saved trips
+- Bookmarks
+- Reviews
