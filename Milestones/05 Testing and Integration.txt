@@ -1,0 +1,10 @@
+Testing & Integration
+
+Goal:
+Test the main user flows and make sure desktop and mobile layouts work correctly.
+
+Planned work:
+- Test responsive layouts
+- Test navigation
+- Test trip and review flows
+- Fix layout and integration problems

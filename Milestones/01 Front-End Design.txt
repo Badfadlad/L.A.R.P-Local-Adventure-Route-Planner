@@ -1,0 +1,13 @@
+Front-End Design
+
+Goal:
+Finish and organize the approved Figma designs for L.A.R.P.
+
+Current status:
+Completed
+
+Includes:
+- Homepage desktop and mobile
+- Discover desktop and mobile
+- Route Builder desktop and mobile
+- Account / Saved Trips / Reviews desktop and mobile

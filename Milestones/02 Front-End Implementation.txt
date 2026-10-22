@@ -1,0 +1,12 @@
+Front-End Implementation
+
+Goal:
+Turn the approved Figma designs into the first working front end.
+
+Planned work:
+- Create project structure
+- Build homepage
+- Build Discover page
+- Build Route Builder
+- Build Account and Reviews
+- Make layouts responsive
