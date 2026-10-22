@@ -1,18 +1,35 @@
-# ======================================================================
-# OWNER:  Person 3
-# PART:   Part 4 - API endpoints for Bookmarks
-# STATUS: TODO
-# ======================================================================
+# OWNER: Person 3 | Part 4 - Bookmarks endpoints
+from fastapi import APIRouter, Depends, Query, Response, status
+from sqlalchemy.orm import Session
 
-"""Bookmark endpoints - TODO (Person 3, Part 4).
-
-Suggested endpoints:
-    GET /bookmarks, POST /bookmarks, PATCH /bookmarks/{id}, DELETE /bookmarks/{id}
-
-Routes should stay thin: validate input with schemas from app.schemas.bookmark,
-call functions in app.services.bookmark, and return response_model schemas.
-"""
-
-from fastapi import APIRouter
+from app.core.dependencies import get_db
+from app.schemas.bookmark import BookmarkCreate, BookmarkRead, BookmarkUpdate
+from app.services import bookmark as service
 
 router = APIRouter(prefix="/bookmarks", tags=["bookmarks"])
+
+
+# Temporary until Person 4 adds JWT authentication.
+def _user_id(user_id: int = Query(..., description="Temporary ID until authentication is connected")):
+    return user_id
+
+
+@router.get("", response_model=list[BookmarkRead])
+def list_bookmarks(user_id: int = Depends(_user_id), db: Session = Depends(get_db)):
+    return service.list_bookmarks(db, user_id)
+
+
+@router.post("", response_model=BookmarkRead, status_code=status.HTTP_201_CREATED)
+def create_bookmark(data: BookmarkCreate, user_id: int = Depends(_user_id), db: Session = Depends(get_db)):
+    return service.create_bookmark(db, user_id, data)
+
+
+@router.patch("/{bookmark_id}", response_model=BookmarkRead)
+def update_bookmark(bookmark_id: int, data: BookmarkUpdate, user_id: int = Depends(_user_id), db: Session = Depends(get_db)):
+    return service.update_bookmark(db, bookmark_id, user_id, data)
+
+
+@router.delete("/{bookmark_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_bookmark(bookmark_id: int, user_id: int = Depends(_user_id), db: Session = Depends(get_db)):
+    service.delete_bookmark(db, bookmark_id, user_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
