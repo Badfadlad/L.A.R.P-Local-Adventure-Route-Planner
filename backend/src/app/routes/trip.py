@@ -7,8 +7,8 @@
 from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_db
-from app.models import TripStatus
+from app.core.dependencies import get_current_user, get_db
+from app.models import TripStatus, User
 from app.schemas.trip import (
     TripCreate, TripRead, TripStopCreate, TripStopRead, TripStopReorder,
     TripStopUpdate, TripSummary, TripUpdate,
@@ -18,8 +18,8 @@ from app.services import trip as trip_service
 router = APIRouter(prefix="/trips", tags=["trips"])
 
 
-def _user_id(user_id: int = Query(..., description="Temporary user ID until Part 5 authentication is connected")) -> int:
-    return user_id
+def _user_id(current_user: User = Depends(get_current_user)) -> int:
+    return current_user.id
 
 
 @router.get("", response_model=list[TripSummary])

@@ -1,14 +1,12 @@
 # OWNER: Person 3 | Part 3 - Users service
 from fastapi import HTTPException
-from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core.auth import hash_password
 from app.models import Bookmark, Review, Trip
 from app.repository import user as repo
 from app.schemas.user import UserCreate, UserUpdate
-
-password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 # register a user; never save the plain password
@@ -18,7 +16,7 @@ def create_user(db: Session, data: UserCreate):
     if repo.get_by_email(db, data.email):
         raise HTTPException(409, "Email already exists")
     fields = data.model_dump(exclude={"password"})
-    fields["hashed_password"] = password_context.hash(data.password)
+    fields["hashed_password"] = hash_password(data.password)
     try:
         return repo.create(db, fields)
     except IntegrityError:
@@ -64,7 +62,7 @@ def update_user(db: Session, user_id: int, data: UserUpdate):
         password = changes.pop("password")
         if password is None:
             raise HTTPException(422, "Password cannot be empty")
-        changes["hashed_password"] = password_context.hash(password)
+        changes["hashed_password"] = hash_password(password)
     try:
         return repo.update(db, user, changes)
     except IntegrityError:

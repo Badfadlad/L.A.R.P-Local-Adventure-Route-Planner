@@ -2,7 +2,8 @@
 from fastapi import APIRouter, Depends, Query, Response, status
 from sqlalchemy.orm import Session
 
-from app.core.dependencies import get_db
+from app.core.dependencies import get_current_user, get_db
+from app.models import User
 from app.schemas.bookmark import BookmarkCreate, BookmarkRead, BookmarkUpdate
 from app.services import bookmark as service
 
@@ -10,8 +11,8 @@ router = APIRouter(prefix="/bookmarks", tags=["bookmarks"])
 
 
 # Temporary until Person 4 adds JWT authentication.
-def _user_id(user_id: int = Query(..., description="Temporary ID until authentication is connected")):
-    return user_id
+def _user_id(current_user: User = Depends(get_current_user)) -> int:
+    return current_user.id
 
 
 @router.get("", response_model=list[BookmarkRead])
