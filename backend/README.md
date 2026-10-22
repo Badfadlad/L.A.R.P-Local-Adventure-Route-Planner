@@ -133,7 +133,7 @@ User 1───* Trip 1───* TripStop *───1 Place
 |---|---|---|
 | 1 – Project setup | Anay | `pyproject.toml`, `requirements.txt`, `core/settings.py`, `core/database.py`, `main.py`, `api/v1/routes.py` ✅ |
 | 2 – Models & schemas | Anay | `models/*`, `schemas/*` ✅ |
-| 3 & 4 – Places / Trips | Person 2 | `repository/`, `services/`, `routes/` → `place.py`, `trip.py` |
+| 3 & 4 – Places / Trips | Arjay | `repository/`, `services/`, `routes/` → `place.py`, `trip.py` ✅ |
 | 3 & 4 – Users / Bookmarks / Reviews | Person 3 | `repository/`, `services/`, `routes/` → `user.py`, `bookmark.py`, `review.py` |
 | 5 & 6 – Auth, middleware, tests | Person 4 | `core/auth.py`, `core/dependencies.py` (`get_current_user`), `routes/auth.py`, `main.py` (CORS + logging), `tests/` (Person 1 already added model/schema tests; add CRUD + endpoint tests) |
 
