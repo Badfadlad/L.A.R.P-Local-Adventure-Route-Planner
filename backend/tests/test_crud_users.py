@@ -1,7 +1,7 @@
 # ======================================================================
 # OWNER:  Person 4 (Nutsa)
 # PART:   Part 6 - Testing
-# STATUS: DONE (password hashing tests are xfail until services/user.py is fixed)
+# STATUS: DONE
 # ======================================================================
 
 """Unit tests for Mitchell's user, bookmark and review repository and service functions.
@@ -24,14 +24,6 @@ from app.schemas.user import UserCreate, UserUpdate
 from app.services import bookmark as bookmark_service
 from app.services import review as review_service
 from app.services import user as user_service
-
-# services/user.py hashes passwords with passlib, and passlib 1.7.4 crashes
-# with bcrypt 5.x (ValueError: "password cannot be longer than 72 bytes").
-# app/core/auth.py's hash_password() uses bcrypt directly and works.
-passlib_bug = pytest.mark.xfail(
-    raises=ValueError,
-    reason="services/user.py uses passlib, which crashes with bcrypt 5.x - use app.core.auth.hash_password",
-)
 
 
 @pytest.fixture()
@@ -106,7 +98,6 @@ def test_user_repo_update_and_delete(db, user):
 # --- services/user.py ----------------------------------------------------
 
 
-@passlib_bug
 def test_create_user_hashes_password(db):
     data = UserCreate(username="anay", email="anay@example.com", password="password123", home_city="San Diego")
     user = user_service.create_user(db, data)
@@ -170,7 +161,6 @@ def test_update_user_empty_email_or_password_is_422(db, user):
     assert_status(422, user_service.update_user, db, user.id, UserUpdate(password=None))
 
 
-@passlib_bug
 def test_update_user_password(db, user):
     updated = user_service.update_user(db, user.id, UserUpdate(password="new-password-456"))
     assert verify_password("new-password-456", updated.hashed_password)
