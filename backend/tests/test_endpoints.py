@@ -1,24 +1,18 @@
 # ======================================================================
 # OWNER:  Person 4 (Nutsa)
 # PART:   Part 6 - Testing
-# STATUS: DONE (place/trip tests are xfail until services are written)
+# STATUS: DONE
 # ======================================================================
 
 """Endpoint tests for /places and /trips.
 
-The /places and /trips routes and services (Person 2) aren't finished yet, so
-these requests currently fail. The tests are marked `xfail` ("expected to
-fail") so the test run stays green. Once Person 2's part is in, they'll show
-up as XPASS - then delete the xfail marker below.
+These exercise the /places and /trips routes and services (Person 2, Parts
+3 & 4) end to end through the API.
 """
 
 import pytest
 
 from app.models import Place, PlaceCategory
-
-pytestmark = pytest.mark.xfail(
-    reason="/places and /trips routes + services not finished yet (Person 2, Parts 3 & 4)",
-)
 
 PLACES = "/api/v1/places"
 TRIPS = "/api/v1/trips"
