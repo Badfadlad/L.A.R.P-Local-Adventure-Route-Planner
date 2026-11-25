@@ -4,7 +4,10 @@ import axios from "axios";
 // The base URL comes from .env.local, e.g.
 //   NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // Attach the saved login token (if any) to every request, so pages that
@@ -41,5 +44,28 @@ export function getErrorMessage(error, fallback = "Something went wrong. Please 
   }
   return fallback;
 }
+
+// Resource helpers keep endpoint details out of UI components. They can be
+// reused by the Discover, Route Builder, and Account screens in later parts.
+export const placesApi = {
+  list: (params = {}) => api.get("/places", { params }),
+  get: (placeId) => api.get(`/places/${placeId}`),
+  create: (place) => api.post("/places", place),
+  update: (placeId, place) => api.patch(`/places/${placeId}`, place),
+  remove: (placeId) => api.delete(`/places/${placeId}`),
+};
+
+export const tripsApi = {
+  list: (params = {}) => api.get("/trips", { params }),
+  get: (tripId) => api.get(`/trips/${tripId}`),
+  create: (trip) => api.post("/trips", trip),
+  update: (tripId, trip) => api.patch(`/trips/${tripId}`, trip),
+  remove: (tripId) => api.delete(`/trips/${tripId}`),
+};
+
+export const usersApi = {
+  profile: () => api.get("/users/me"),
+  updateProfile: (profile) => api.patch("/users/me", profile),
+};
 
 export default api;
