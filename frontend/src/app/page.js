@@ -6,12 +6,14 @@
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import PlaceList from "@/components/PlaceList";
+import TripList from "@/components/TripList";
 
 export default function Home() {
   const { user, loading, logout } = useAuth();
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-12 text-center">
+    <main className="flex flex-1 flex-col items-center gap-10 px-4 py-12 text-center">
       <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">L.A.R.P</h1>
       <p className="max-w-md text-muted-foreground">Local Adventure Route Planner</p>
 
@@ -36,6 +38,9 @@ export default function Home() {
           </Link>
         </div>
       )}
+
+      <TripList />
+      <PlaceList />
     </main>
   );
 }
