@@ -1,0 +1,61 @@
+# L.A.R.P - whole app with one command (extra credit: Docker Compose).
+#
+#   docker compose up --build
+#
+# Then open https://localhost (accept the local certificate warning once).
+# Services: PostgreSQL database, FastAPI backend, Next.js frontend, and Caddy
+# serving everything over HTTPS. See README.md ("Run everything with Docker").
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: larp
+      POSTGRES_USER: larp
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-larp-dev-password}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U larp -d larp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://larp:${POSTGRES_PASSWORD:-larp-dev-password}@db:5432/larp
+      # Change this in a .env file next to this one for anything real.
+      SECRET_KEY: ${SECRET_KEY:-dev-only-secret-change-me}
+      CORS_ORIGINS: https://localhost
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: /api/v1
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  db-data:
+  caddy-data:

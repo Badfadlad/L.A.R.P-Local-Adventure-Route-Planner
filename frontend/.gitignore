@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Playwright / Storybook output
+/test-results/
+/playwright-report/
+/blob-report/
+/storybook-static/
+
+# Local AI assistant notes (not committed)
+AGENTS.md

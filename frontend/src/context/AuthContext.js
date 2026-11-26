@@ -20,6 +20,16 @@ const TOKEN_KEY = "token";
 
 const AuthContext = createContext(null);
 
+/** True if a JWT's "exp" time has passed (or the token can't be read). */
+export function isTokenExpired(token, now = Date.now()) {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+    return typeof payload.exp === "number" && payload.exp * 1000 <= now;
+  } catch {
+    return true;
+  }
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null); // the logged-in user from GET /auth/me
   const [token, setToken] = useState(null);
@@ -30,7 +40,12 @@ export function AuthProvider({ children }) {
     let cancelled = false;
 
     async function restoreSession() {
-      const savedToken = localStorage.getItem(TOKEN_KEY);
+      let savedToken = localStorage.getItem(TOKEN_KEY);
+      // Security: don't even send an expired token to the server.
+      if (savedToken && isTokenExpired(savedToken)) {
+        localStorage.removeItem(TOKEN_KEY);
+        savedToken = null;
+      }
       if (savedToken) {
         try {
           const res = await api.get("/auth/me");
@@ -57,7 +72,10 @@ export function AuthProvider({ children }) {
     // The backend's /auth/login uses FastAPI's OAuth2 form, so it expects
     // form data with a "username" field (an email works there too), not JSON.
     const form = new URLSearchParams({ username: usernameOrEmail, password });
-    const res = await api.post("/auth/login", form);
+    // The Content-Type must be set here: api.js defaults every request to JSON.
+    const res = await api.post("/auth/login", form, {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
 
     const newToken = res.data.access_token;
     localStorage.setItem(TOKEN_KEY, newToken);
@@ -84,8 +102,20 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem("activeTripId");
     setToken(null);
     setUser(null);
+  }, []);
+
+  // api.js fires "larp:logout" when the backend rejects our token (401),
+  // so the whole app logs out instead of showing a half-logged-in state.
+  useEffect(() => {
+    const onForcedLogout = () => {
+      setToken(null);
+      setUser(null);
+    };
+    window.addEventListener("larp:logout", onForcedLogout);
+    return () => window.removeEventListener("larp:logout", onForcedLogout);
   }, []);
 
   const value = useMemo(
