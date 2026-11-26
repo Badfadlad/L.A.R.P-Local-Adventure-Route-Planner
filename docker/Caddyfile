@@ -1,0 +1,29 @@
+# Caddy: one HTTPS address for the whole app (extra credit: HTTPS).
+#   https://localhost        -> Next.js frontend
+#   https://localhost/api/*  -> FastAPI backend (same address, so no CORS needed)
+#   https://localhost/docs   -> Swagger UI
+# "tls internal" makes a local certificate. Your browser will warn the first
+# time; that's expected for localhost. On a real domain Caddy gets a free
+# Let's Encrypt certificate automatically (replace "localhost" with the domain).
+{
+	admin off
+}
+
+localhost {
+	tls internal
+	encode gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	@backend path /api/* /docs /docs/* /openapi.json
+	handle @backend {
+		reverse_proxy backend:8000
+	}
+
+	handle {
+		reverse_proxy frontend:3000
+	}
+}

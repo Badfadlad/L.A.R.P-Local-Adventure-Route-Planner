@@ -22,6 +22,19 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Security: if the backend says our token is no longer valid (expired or
+// tampered with), forget it right away instead of keeping a dead token around.
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error?.response?.status === 401 && typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      window.dispatchEvent(new Event("larp:logout"));
+    }
+    return Promise.reject(error);
+  }
+);
+
 /**
  * Turn an Axios error from the backend into a message we can show the user.
  * FastAPI sends errors as { detail: "..." }, or for validation errors as
@@ -61,6 +74,24 @@ export const tripsApi = {
   create: (trip) => api.post("/trips", trip),
   update: (tripId, trip) => api.patch(`/trips/${tripId}`, trip),
   remove: (tripId) => api.delete(`/trips/${tripId}`),
+  complete: (tripId) => api.post(`/trips/${tripId}/complete`),
+  addStop: (tripId, stop) => api.post(`/trips/${tripId}/stops`, stop),
+  updateStop: (tripId, stopId, stop) => api.patch(`/trips/${tripId}/stops/${stopId}`, stop),
+  removeStop: (tripId, stopId) => api.delete(`/trips/${tripId}/stops/${stopId}`),
+  reorderStops: (tripId, stopIds) => api.put(`/trips/${tripId}/stops/order`, { stop_ids: stopIds }),
+};
+
+export const bookmarksApi = {
+  list: () => api.get("/bookmarks"),
+  create: (placeId, note) => api.post("/bookmarks", { place_id: placeId, note: note || null }),
+  remove: (bookmarkId) => api.delete(`/bookmarks/${bookmarkId}`),
+};
+
+export const reviewsApi = {
+  mine: () => api.get("/reviews/mine"),
+  forPlace: (placeId) => api.get("/reviews", { params: { place_id: placeId } }),
+  create: (review) => api.post("/reviews", review),
+  remove: (reviewId) => api.delete(`/reviews/${reviewId}`),
 };
 
 export const usersApi = {
